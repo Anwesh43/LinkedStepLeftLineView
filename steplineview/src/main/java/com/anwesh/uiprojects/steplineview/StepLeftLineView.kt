@@ -219,4 +219,13 @@ class StepLeftLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : StepLeftLineView {
+            val view : StepLeftLineView = StepLeftLineView(activity)
+            activity.setContentView(view)
+            return view 
+        }
+    }
 }

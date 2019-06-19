@@ -20,6 +20,7 @@ val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#0D47A1")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val delay : Long = 20
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -36,10 +37,10 @@ fun Canvas.drawStepLine(i : Int, scale : Float, size : Float, w : Float, paint :
     val gap = size / (lines)
     val currSize : Float = gap * (lines - i)
     val xGap : Float = (2 * size) / lines
-    val currGap : Float = xGap * (5 - lines)
+    val currGap : Float = xGap * (lines - i)
     save()
-    translate(-w / 2 + paint.strokeWidth / 2 + (w/ 2 + currGap) * sci,  0f)
-    drawLine(0f, 0f, 0f, -currGap, paint)
+    translate(-w / 2 + paint.strokeWidth + (w / 2 - size + currGap) * sci,  0f)
+    drawLine(0f, 0f, 0f, -currSize, paint)
     restore()
 }
 
@@ -111,7 +112,7 @@ class StepLeftLineView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(delay)
                     view.invalidate()
                 } catch(ex : Exception) {
 
@@ -120,8 +121,9 @@ class StepLeftLineView(ctx : Context) : View(ctx) {
         }
 
         fun start() {
-            if (animated) {
-                animated = false
+            if (!animated) {
+                animated = true
+                view.postInvalidate()
             }
         }
 

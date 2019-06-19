@@ -197,4 +197,26 @@ class StepLeftLineView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : StepLeftLineView) {
+
+        private val animator : Animator = Animator(view)
+        private val sll : StepLeftLine = StepLeftLine(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            sll.draw(canvas, paint)
+            animator.animate {
+                sll.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            sll.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }

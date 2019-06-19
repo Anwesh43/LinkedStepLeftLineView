@@ -30,3 +30,38 @@ fun Float.mirrorValue(a : Int, b : Int) : Float {
     return (1 - k) * a.inverse() + k * b.inverse()
 }
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = dir * mirrorValue(a, b) * scGap
+
+fun Canvas.drawStepLine(i : Int, scale : Float, size : Float, w : Float, paint : Paint) {
+    val sci : Float = scale.divideScale(i, lines)
+    val gap = size / (lines)
+    val currSize : Float = gap * (lines - i)
+    val xGap : Float = (2 * size) / lines
+    val currGap : Float = xGap * (5 - lines)
+    save()
+    translate(-w / 2 + paint.strokeWidth / 2 + (w/ 2 + currGap) * sci,  0f)
+    drawLine(0f, 0f, 0f, -currGap, paint)
+    restore()
+}
+
+fun Canvas.drawStepLines(scale : Float, size : Float, w : Float, paint : Paint) {
+    for (j in 0..(lines - 1)) {
+        drawStepLine(j, scale, size, w, paint)
+    }
+}
+
+fun Canvas.drawSLLNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
+    paint.color = foreColor
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    paint.strokeCap = Paint.Cap.ROUND
+    save()
+    translate(w / 2, gap * (i + 1))
+    rotate(90f * sc2)
+    drawStepLines(sc1, size, w, paint)
+    restore()
+}
